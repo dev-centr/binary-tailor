@@ -1,0 +1,50 @@
+ifndef::env-github[:icons: font]
+:toc: preamble
+
+ifdef::env-github[]
+++++
+<div align="center">
+<a href="https://github.com/dev-centr/binary-tailor/graphs/contributors"><img src="https://img.shields.io/github/contributors/dev-centr/binary-tailor.svg?style=for-the-badge" alt="Contributors"></a>
+<a href="https://github.com/dev-centr/binary-tailor/blob/main/LICENSE"><img src="https://img.shields.io/github/license/dev-centr/binary-tailor.svg?style=for-the-badge" alt="License"></a>
+<h3 align="center">Binary Tailor</h3>
+<p align="center">
+One download. Host-shaped binary after delivery.<br />
+<a href="https://docs.devcentr.org/general-knowledge/latest/how-to/binary-tailor.html"><strong>Explore the docs »</strong></a>
+</p>
+</div>
+++++
+endif::[]
+
+= Binary Tailor
+
+Persistent **install adapter**: you ship **one** polyglot pack (APE, fat Mach-O, or a ZIP of native slices). The user — or PackageHub on delivery — runs Binary Tailor, which **strips non-target headers** and writes a boring PE, ELF, or Mach-O the host antivirus and debugger already understand.
+
+This *kind of* defeats a unified on-disk binary. It keeps a unified **CI and download page**.
+
+== Commands
+
+[source,text]
+----
+binary-tailor inspect   app.bin
+binary-tailor tailor    app.bin -o app.exe --target windows-x64
+binary-tailor pack      -o app.bin --name myapp windows-x64=./win.exe linux-x64=./lin macos-arm64=./mac
+binary-tailor assimilate ape.com --target linux-x64
+binary-tailor memload   payload.dylib
+----
+
+== Build
+
+Sibling checkout of link:https://github.com/dev-centr/macho-memload[macho-memload] is required (`../macho-memload`).
+
+[source,bash]
+----
+dub build --compiler=ldc2
+----
+
+== Changelog
+
+See `CHANGELOG.adoc`.
+
+== License
+
+MIT

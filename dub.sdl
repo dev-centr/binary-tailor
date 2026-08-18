@@ -1,0 +1,16 @@
+name "binary-tailor"
+description "Strip non-target headers from polyglot / APE packs; pack native slices into one download"
+version "0.1.0"
+authors "DevCentr"
+copyright "Copyright © 2026, DevCentr"
+homepage "https://github.com/dev-centr/binary-tailor"
+license "MIT"
+
+targetType "executable"
+targetName "binary-tailor"
+
+dependency "macho-memload" path="../macho-memload"
+
+configuration "application" {
+	targetType "executable"
+}

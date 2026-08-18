@@ -1,0 +1,8 @@
+= Changelog
+
+== 2026-08-18 — v0.1.0
+
+* CLI: `inspect`, `tailor`, `pack`, `assimilate`, `graft`.
+* Pack format: ZIP + `manifest.sdl` of native slices (one download, many kernels).
+* APE assimilate: decode embedded ELF `printf` octals and Mach-O `dd` windows from the first 8 KiB.
+* Links `macho-memload` for in-memory Mach-O mapping on Darwin.

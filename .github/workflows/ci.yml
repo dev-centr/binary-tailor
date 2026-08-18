@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            triplet: linux-x64
+          - os: ubuntu-24.04-arm
+            triplet: linux-arm64
+          - os: windows-latest
+            triplet: windows-x64
+          - os: macos-14
+            triplet: macos-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: binary-tailor
+      - uses: actions/checkout@v4
+        with:
+          repository: dev-centr/macho-memload
+          path: macho-memload
+      - uses: dlang-community/setup-dlang@v1
+        with:
+          compiler: ldc-latest
+      - name: Build
+        working-directory: binary-tailor
+        run: dub build --compiler=ldc2
+      - name: Smoke inspect
+        working-directory: binary-tailor
+        shell: bash
+        run: |
+          bin=./binary-tailor
+          if [ -f binary-tailor.exe ]; then bin=./binary-tailor.exe; fi
+          "$bin" help
+      - name: Upload native slice
+        if: github.ref_type == 'tag'
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary-tailor-${{ matrix.triplet }}
+          path: |
+            binary-tailor/binary-tailor
+            binary-tailor/binary-tailor.exe
+
+  pack:
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: binary-tailor
+      - uses: actions/checkout@v4
+        with:
+          repository: dev-centr/macho-memload
+          path: macho-memload
+      - uses: dlang-community/setup-dlang@v1
+        with:
+          compiler: ldc-latest
+      - run: dub build --compiler=ldc2
+        working-directory: binary-tailor
+      - uses: actions/download-artifact@v4
+        with:
+          path: slices
+      - name: Pack one download
+        working-directory: binary-tailor
+        shell: bash
+        run: |
+          args=()
+          shopt -s globstar nullglob
+          for f in ../slices/**/binary-tailor ../slices/**/binary-tailor.exe; do
+            base=$(basename "$(dirname "$f")")
+            trip=${base#binary-tailor-}
+            args+=("${trip}=${f}")
+          done
+          ./binary-tailor pack -o ../binary-tailor.bin --name binary-tailor --version "${GITHUB_REF_NAME#v}" "${args[@]}"
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: binary-tailor.bin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
