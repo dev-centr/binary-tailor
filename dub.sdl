@@ -9,7 +9,7 @@ license "MIT"
 targetType "executable"
 targetName "binary-tailor"
 
-dependency "macho-memload" path="../macho-memload"
+dependency "macho-memload" version="~>0.1.0"
 
 configuration "application" {
 	targetType "executable"
