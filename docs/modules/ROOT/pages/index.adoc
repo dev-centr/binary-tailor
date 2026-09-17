@@ -1,7 +1,7 @@
 = Binary Tailor
 :description: Install adapter that turns a polyglot pack into a host PE, ELF, or Mach-O.
 
-xref:general-knowledge:how-to/binary-tailor.adoc[How-to] ·
-xref:general-knowledge:explanation/architecture/polyglot-distribution.adoc[Polyglot distribution]
+xref:general-knowledge::how-to/binary-tailor.adoc[How-to] ·
+xref:general-knowledge::explanation/architecture/polyglot-distribution.adoc[Polyglot distribution]
 
 Binary Tailor is the persistent delivery tool in Dev-Centr's experimental unified-binary path: one CI matrix, one download link, host-shaped bytes after tailor.
