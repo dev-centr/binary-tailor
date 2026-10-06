@@ -13,3 +13,5 @@
 !.github/**
 !examples/
 !examples/**
+!/.editorconfig
+!/.gitattributes
