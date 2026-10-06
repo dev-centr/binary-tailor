@@ -23,14 +23,14 @@ jobs:
             triplet: macos-arm64
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: binary-tailor
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: dev-centr/macho-memload
           path: macho-memload
-      - uses: dlang-community/setup-dlang@v1
+      - uses: dlang-community/setup-dlang@v2
         with:
           compiler: ldc-latest
       - name: Build
@@ -45,7 +45,7 @@ jobs:
           "$bin" help
       - name: Upload native slice
         if: github.ref_type == 'tag'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: binary-tailor-${{ matrix.triplet }}
           path: |
@@ -57,19 +57,19 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: binary-tailor
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: dev-centr/macho-memload
           path: macho-memload
-      - uses: dlang-community/setup-dlang@v1
+      - uses: dlang-community/setup-dlang@v2
         with:
           compiler: ldc-latest
       - run: dub build --compiler=ldc2
         working-directory: binary-tailor
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: slices
       - name: Pack one download
@@ -84,7 +84,7 @@ jobs:
             args+=("${trip}=${f}")
           done
           ./binary-tailor pack -o ../binary-tailor.bin --name binary-tailor --version "${GITHUB_REF_NAME#v}" "${args[@]}"
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           files: binary-tailor.bin
         env:
