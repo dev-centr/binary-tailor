@@ -51,6 +51,7 @@ jobs:
           path: |
             binary-tailor/binary-tailor
             binary-tailor/binary-tailor.exe
+          retention-days: 3
 
   pack:
     if: github.ref_type == 'tag'
