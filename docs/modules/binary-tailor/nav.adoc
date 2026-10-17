@@ -1,2 +1,3 @@
-* xref:index.adoc[]
+.Binary Tailor
+* xref:index.adoc[Overview]
 * xref:changelog.adoc[]
